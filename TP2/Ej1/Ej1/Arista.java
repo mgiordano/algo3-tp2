@@ -23,9 +23,9 @@ class AristaComparator implements Comparator<Arista>{
     	Integer peso1 = a1.peso;        
     	Integer peso2 = a2.peso;   
        
-        if(peso1 > peso2)
+        if(peso1 < peso2)
             return 1;
-        else if(peso1 < peso2)
+        else if(peso1 > peso2)
             return -1;
         else
             return 0;    

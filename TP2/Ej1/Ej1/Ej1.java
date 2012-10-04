@@ -5,7 +5,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
@@ -14,8 +13,8 @@ import java.util.StringTokenizer;
 
 public class Ej1 {
 
-		
 	public static Integer buscarPrecio(Mapa mapa){
+		
 		Comparator<Arista> comparator = new AristaComparator();
 		PriorityQueue<Arista> heap = new PriorityQueue<Arista>(11, comparator);
 		
@@ -24,6 +23,7 @@ public class Ej1 {
 		Arista actual;
 		while (mapa.destino.estado == false){
 			actual = heap.poll();
+			System.out.println(actual.peso);
 			if (actual.hasta.estado == true) continue;
 			actual.hasta.estado = true;
 			actual.hasta.peso =  Math.min(actual.peso, actual.desde.peso);
@@ -61,7 +61,6 @@ public class Ej1 {
 				c1 = "c1";
 				c2 = "c2";
 				n = "0";
-				ArrayList<String>  ciudades = new ArrayList<String>();
 				
 				// leo la primera linea
 				nombre = new StringTokenizer( linea, " ");
@@ -77,21 +76,11 @@ public class Ej1 {
 					c1 = nombre.nextToken();
 					c2 = nombre.nextToken();
 					n = nombre.nextToken();
-					ciudades.add(c1);
-					ciudades.add(c2);
-					ciudades.add(n);
+					int temp = Integer.parseInt(n);
+					Integer peso = temp;
+					mapa.agregar(c1,c2,peso);
 				}
-				
-				// ahora en ciudades tengo un array de Ciudades, cada par est�n relacionadas
-				// ademas en p tengo al source y en q al destination
-			
-				int temp = Integer.parseInt(n);
-				Integer peso = temp;
-				mapa.agregar(c1,c2,peso);
-				
-				//System.out.println(mapa.origen.nombre);
-				//System.out.println(mapa.destino.nombre);
-				
+
 				res = buscarPrecio(mapa);
 				
 				Integer res2 = res;

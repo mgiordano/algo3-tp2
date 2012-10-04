@@ -2,6 +2,7 @@ TP2/.metadata/
 TP2/.classpath
 TP2/.project
 TP2/.settings/
+TP2/bin
 .metadata
 *.class
 *.out
@@ -13,3 +14,4 @@ TP2/.settings/
 *.toc
 *.gz
 .backup
+*.*~

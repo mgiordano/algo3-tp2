@@ -20,6 +20,8 @@ public class Ciudad {
 			vecinos = vcns;
 		}
 		
+		//Metodos
+		
 		public void insertarVecino(Arista arista){
 			vecinos.add(arista);
 		}
