@@ -25,14 +25,14 @@ public class Mapa {
 		Ciudad c2 = ciudades.get(ciudad2);
 		if (c1 != null ){
 			if (c2 != null){
-				Arista a12 = new Arista(c1,c2,p);
-				Arista a21 = new Arista(c2,c1,p);
+				Tramo a12 = new Tramo(c1,c2,p);
+				Tramo a21 = new Tramo(c2,c1,p);
 				c1.insertarVecino(a12);
 				c2.insertarVecino(a21);
 			}else{
 				Ciudad nuevaCiudad2 = new Ciudad(ciudad2, false, Integer.MAX_VALUE);
-				Arista a12 = new Arista(c1,nuevaCiudad2,p);
-				Arista a21 = new Arista(nuevaCiudad2,c1,p);
+				Tramo a12 = new Tramo(c1,nuevaCiudad2,p);
+				Tramo a21 = new Tramo(nuevaCiudad2,c1,p);
 				c1.insertarVecino(a12);
 				nuevaCiudad2.insertarVecino(a21);
 				ciudades.put(ciudad2, nuevaCiudad2);
@@ -40,16 +40,16 @@ public class Mapa {
 		}else{
 			if (c2 != null){
 				Ciudad nuevaCiudad1 = new Ciudad(ciudad1, false, Integer.MAX_VALUE);
-				Arista a12 = new Arista(nuevaCiudad1,c2,p);
-				Arista a21 = new Arista(c2,nuevaCiudad1,p);
+				Tramo a12 = new Tramo(nuevaCiudad1,c2,p);
+				Tramo a21 = new Tramo(c2,nuevaCiudad1,p);
 				nuevaCiudad1.insertarVecino(a12);
 				c2.insertarVecino(a21);
 				ciudades.put(ciudad1, nuevaCiudad1);
 			}else{
 				Ciudad nuevaCiudad1 = new Ciudad(ciudad1, false, Integer.MAX_VALUE);
 				Ciudad nuevaCiudad2 = new Ciudad(ciudad2, false, Integer.MAX_VALUE);
-				Arista a12 = new Arista(nuevaCiudad1,nuevaCiudad2,p);
-				Arista a21 = new Arista(nuevaCiudad2,nuevaCiudad1,p);
+				Tramo a12 = new Tramo(nuevaCiudad1,nuevaCiudad2,p);
+				Tramo a21 = new Tramo(nuevaCiudad2,nuevaCiudad1,p);
 				nuevaCiudad1.insertarVecino(a12);
 				nuevaCiudad2.insertarVecino(a21);
 				ciudades.put(ciudad1, nuevaCiudad1);

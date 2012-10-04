@@ -2,13 +2,13 @@ package Ej1;
 
 import java.util.Comparator;
 
-public class Arista {
+public class Tramo {
 	
 	public Integer peso;
 	public Ciudad desde;
 	public Ciudad hasta;
 	
-	public Arista(Ciudad a, Ciudad b, Integer p){
+	public Tramo(Ciudad a, Ciudad b, Integer p){
 		peso = p;
 		desde = a;
 		hasta = b;
@@ -16,9 +16,9 @@ public class Arista {
 	
 }
 
-class AristaComparator implements Comparator<Arista>{
+class TramoComparator implements Comparator<Tramo>{
 	   
-    public int compare(Arista a1, Arista a2){
+    public int compare(Tramo a1, Tramo a2){
        
     	Integer peso1 = a1.peso;        
     	Integer peso2 = a2.peso;   

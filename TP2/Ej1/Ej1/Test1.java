@@ -32,12 +32,12 @@ public class Test1 {
 	}
 	
 	@Test
-	public void testArista(){
+	public void testTramo(){
 		Ciudad SC = new Ciudad("Sin City", true, 100);
 		Ciudad M = new Ciudad("Metropolis", true, 29);
 		
-		Arista aSCM = new Arista(SC,M,50);
-		Arista aMSC = new Arista(M,SC,10);
+		Tramo aSCM = new Tramo(SC,M,50);
+		Tramo aMSC = new Tramo(M,SC,10);
 		
 		assertEquals(aSCM.desde, SC);
 		assertEquals(aSCM.hasta, M);
@@ -65,27 +65,27 @@ public class Test1 {
 	public void testComparator(){
 		Ciudad Q = new Ciudad("Quequen", true, 100);
 		Ciudad N = new Ciudad("Necochea", true, 29);
-		Arista aQN = new Arista(Q,N,10);
+		Tramo aQN = new Tramo(Q,N,10);
 		
 		Ciudad P = new Ciudad("Pinamar", true, 0);
 		Ciudad MP = new Ciudad("Mar del Plata", true, 0);
-		Arista aPMP = new Arista(P,MP,200);
+		Tramo aPMP = new Tramo(P,MP,200);
 		
-		Comparator<Arista> comp = new AristaComparator();
+		Comparator<Tramo> comp = new TramoComparator();
 		assertEquals(comp.compare(aQN,aPMP), 1);
 		aPMP.peso = 1;
 		assertEquals(comp.compare(aQN,aPMP), -1);
 		assertEquals(comp.compare(aPMP,aPMP), 0);
 		assertEquals(comp.compare(aPMP,aQN), 1);
 		
-		PriorityQueue<Arista> heap = new PriorityQueue<Arista>(11, comp);
+		PriorityQueue<Tramo> heap = new PriorityQueue<Tramo>(11, comp);
 		heap.add(aPMP);
 		heap.add(aQN);
 		assertEquals(heap.poll().peso, (Integer) 10);
 	}
 	
 	@Test
-	public void testAristaCiudad(){
+	public void testTramoCiudad(){
 		
 		Ciudad L = new Ciudad("Liverpool", false, -12);
 		Ciudad T = new Ciudad("Tokyo", true, 128341);
@@ -93,23 +93,23 @@ public class Test1 {
 		Ciudad E = new Ciudad("Edimburgo", true, 69);
 		Ciudad B = new Ciudad("Bath", false, 12);
 		
-		Arista aLT = new Arista(L,T,4);
-		Arista aLA = new Arista(L,A,12);
-		Arista aLB = new Arista(L,B,4);
-		Arista aTL = new Arista(T,L,4);
-		Arista aTE = new Arista(T,E,10);
-		Arista aBA = new Arista(B,A,121);
+		Tramo aLT = new Tramo(L,T,4);
+		Tramo aLA = new Tramo(L,A,12);
+		Tramo aLB = new Tramo(L,B,4);
+		Tramo aTL = new Tramo(T,L,4);
+		Tramo aTE = new Tramo(T,E,10);
+		Tramo aBA = new Tramo(B,A,121);
 		
-		List<Arista> lista1 = new ArrayList<Arista>();
+		List<Tramo> lista1 = new ArrayList<Tramo>();
 		lista1.add(aLT);
 		lista1.add(aLA);
 		lista1.add(aLB);
 		
-		List<Arista> lista2 = new ArrayList<Arista>();
+		List<Tramo> lista2 = new ArrayList<Tramo>();
 		lista2.add(aTL);
 		lista2.add(aTE);
 		
-		List<Arista> lista3 = new ArrayList<Arista>();
+		List<Tramo> lista3 = new ArrayList<Tramo>();
 		lista3.add(aBA);
 		
 		L.vecinos = lista1;

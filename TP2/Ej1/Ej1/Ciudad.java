@@ -8,7 +8,7 @@ public class Ciudad {
 		public String nombre;
 		public boolean estado;
 		public Integer peso;
-		public List<Arista> vecinos;
+		public List<Tramo> vecinos;
 		
 		//Constructor
 		
@@ -16,14 +16,14 @@ public class Ciudad {
 			nombre = n;
 			estado = e;
 			peso = p;
-			List<Arista> vcns = new ArrayList<Arista>();
+			List<Tramo> vcns = new ArrayList<Tramo>();
 			vecinos = vcns;
 		}
 		
 		//Metodos
 		
-		public void insertarVecino(Arista arista){
-			vecinos.add(arista);
+		public void insertarVecino(Tramo tramo){
+			vecinos.add(tramo);
 		}
 }
 

@@ -15,15 +15,14 @@ public class Ej1 {
 
 	public static Integer buscarPrecio(Mapa mapa){
 		
-		Comparator<Arista> comparator = new AristaComparator();
-		PriorityQueue<Arista> heap = new PriorityQueue<Arista>(11, comparator);
+		Comparator<Tramo> comparator = new TramoComparator();
+		PriorityQueue<Tramo> heap = new PriorityQueue<Tramo>(11, comparator);
 		
 		mapa.origen.estado = true;
 		agregarVecinos(heap, mapa.origen.vecinos);
-		Arista actual;
+		Tramo actual;
 		while (mapa.destino.estado == false){
 			actual = heap.poll();
-			System.out.println(actual.peso);
 			if (actual.hasta.estado == true) continue;
 			actual.hasta.estado = true;
 			actual.hasta.peso =  Math.min(actual.peso, actual.desde.peso);
@@ -33,8 +32,8 @@ public class Ej1 {
 		return mapa.destino.peso;
 	}
 	
-	public static void agregarVecinos(PriorityQueue<Arista> heap, List<Arista> vecinos){
-		ListIterator<Arista> it = vecinos.listIterator();
+	public static void agregarVecinos(PriorityQueue<Tramo> heap, List<Tramo> vecinos){
+		ListIterator<Tramo> it = vecinos.listIterator();
 		while (it.hasNext()){
 			heap.add(it.next());
 		}
