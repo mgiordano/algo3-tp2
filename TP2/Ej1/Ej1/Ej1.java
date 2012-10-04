@@ -23,7 +23,6 @@ public class Ej1 {
 		Tramo actual;
 		while (mapa.destino.estado == false){
 			actual = heap.poll();
-			if (actual.hasta.estado == true) continue;
 			actual.hasta.estado = true;
 			actual.hasta.peso =  Math.min(actual.peso, actual.desde.peso);
 			agregarVecinos(heap, actual.hasta.vecinos);
@@ -35,7 +34,12 @@ public class Ej1 {
 	public static void agregarVecinos(PriorityQueue<Tramo> heap, List<Tramo> vecinos){
 		ListIterator<Tramo> it = vecinos.listIterator();
 		while (it.hasNext()){
-			heap.add(it.next());
+			Tramo t = it.next();
+			if (t.hasta.estado == true){
+				continue;
+			}else{
+				heap.add(t);
+			}
 		}
 		
 	}
