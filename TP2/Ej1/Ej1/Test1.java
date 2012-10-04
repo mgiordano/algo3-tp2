@@ -16,8 +16,12 @@ public class Test1 {
 	@Test
 	public void testCiudad(){
 		
-		Ciudad BA = new Ciudad("Buenos Aires", false, 10);
-		Ciudad NY = new Ciudad("Nueva York", true, 2);
+		Ciudad BA = new Ciudad("Buenos Aires");
+		Ciudad NY = new Ciudad("Nueva York");
+		
+		BA.peso = 10;
+		NY.peso = 2;
+		NY.estado = true;
 		
 		assertEquals(BA.nombre, "Buenos Aires");
 		assertEquals(BA.estado, false);
@@ -33,8 +37,13 @@ public class Test1 {
 	
 	@Test
 	public void testTramo(){
-		Ciudad SC = new Ciudad("Sin City", true, 100);
-		Ciudad M = new Ciudad("Metropolis", true, 29);
+		Ciudad SC = new Ciudad("Sin City");
+		Ciudad M = new Ciudad("Metropolis");
+		
+		SC.estado = true;
+		SC.peso = 100;
+		M.estado = true;
+		M.peso = 29;
 		
 		Tramo aSCM = new Tramo(SC,M,50);
 		Tramo aMSC = new Tramo(M,SC,10);
@@ -53,7 +62,8 @@ public class Test1 {
 		assertEquals(aMSC.desde.nombre, "Madagascar");
 		
 		aMSC.peso = 12;
-		Ciudad W = new Ciudad("Washington", false, 9);
+		Ciudad W = new Ciudad("Washington");
+		W.peso = 9;
 		aSCM.desde = W;
 		
 		assertEquals(aMSC.peso, (Integer) 12);
@@ -63,12 +73,21 @@ public class Test1 {
 	
 	@Test
 	public void testComparator(){
-		Ciudad Q = new Ciudad("Quequen", true, 100);
-		Ciudad N = new Ciudad("Necochea", true, 29);
+		Ciudad Q = new Ciudad("Quequen");
+		Ciudad N = new Ciudad("Necochea");
+		Q.peso = 100;
+		Q.estado = true;
+		N.peso = 29;
+		N.estado = true;
+		
 		Tramo aQN = new Tramo(Q,N,10);
 		
-		Ciudad P = new Ciudad("Pinamar", true, 0);
-		Ciudad MP = new Ciudad("Mar del Plata", true, 0);
+		Ciudad P = new Ciudad("Pinamar");
+		Ciudad MP = new Ciudad("Mar del Plata");
+		P.peso = 0;
+		P.estado = true;
+		MP.peso = 0;
+		MP.estado = true;
 		Tramo aPMP = new Tramo(P,MP,200);
 		
 		Comparator<Tramo> comp = new TramoComparator();
@@ -87,11 +106,17 @@ public class Test1 {
 	@Test
 	public void testTramoCiudad(){
 		
-		Ciudad L = new Ciudad("Liverpool", false, -12);
-		Ciudad T = new Ciudad("Tokyo", true, 128341);
-		Ciudad A = new Ciudad("Amsterdam", true, 0);
-		Ciudad E = new Ciudad("Edimburgo", true, 69);
-		Ciudad B = new Ciudad("Bath", false, 12);
+		Ciudad L = new Ciudad("Liverpool");
+		Ciudad T = new Ciudad("Tokyo");
+		Ciudad A = new Ciudad("Amsterdam");
+		Ciudad E = new Ciudad("Edimburgo");
+		Ciudad B = new Ciudad("Bath");
+		
+		L.peso = -12;
+		T.peso = 128341;
+		A.peso = 0;
+		E.peso = 69;
+		B.peso = 12;
 		
 		Tramo aLT = new Tramo(L,T,4);
 		Tramo aLA = new Tramo(L,A,12);

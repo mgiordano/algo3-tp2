@@ -12,10 +12,10 @@ public class Ciudad {
 		
 		//Constructor
 		
-		public Ciudad(String n, boolean e, Integer p){
+		public Ciudad(String n){
 			nombre = n;
-			estado = e;
-			peso = p;
+			estado = false;
+			peso = Integer.MAX_VALUE;
 			List<Tramo> vcns = new ArrayList<Tramo>();
 			vecinos = vcns;
 		}
