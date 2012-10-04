@@ -1,0 +1,106 @@
+package Ej1;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
+
+public class Ej1 {
+
+		
+	public static Integer buscarPrecio(Mapa mapa){
+		Comparator<Arista> comparator = new AristaComparator();
+		PriorityQueue<Arista> heap = new PriorityQueue<Arista>(11, comparator);
+		
+		mapa.origen.estado = true;
+		agregarVecinos(heap, mapa.origen.vecinos);
+		Arista actual;
+		while (mapa.destino.estado == false){
+			actual = heap.poll();
+			if (actual.hasta.estado == true) continue;
+			actual.hasta.estado = true;
+			actual.hasta.peso =  Math.min(actual.peso, actual.desde.peso);
+			agregarVecinos(heap, actual.hasta.vecinos);
+		}
+
+		return mapa.destino.peso;
+	}
+	
+	public static void agregarVecinos(PriorityQueue<Arista> heap, List<Arista> vecinos){
+		ListIterator<Arista> it = vecinos.listIterator();
+		while (it.hasNext()){
+			heap.add(it.next());
+		}
+		
+	}
+	
+	public static void resolverFile(String file) throws IOException{
+		/*
+		 * Esta funcion toma el path del archivo de entrada, procesa los datos y llama
+		 * a la funcion que resuelve el problema. Luego escribe los resultados en 
+		 * un archivo de salida en la carpeta root del proyecto
+		 */
+
+			BufferedReader reader = new BufferedReader(new FileReader(file)); // Creo el buffer a llenar
+			String linea; // Creo el string a utilizar (donde se van a guardar las cosas del buffer)
+			BufferedWriter os = new BufferedWriter( new FileWriter( "Tp2Ej1.out" ) );
+
+			StringTokenizer nombre;
+			int res;
+
+			// Leo el archivo
+			while ((linea = reader.readLine()) != null){ // mientras que hayan mas lineas que leer
+				String p, q, c1, c2, n;
+				c1 = "c1";
+				c2 = "c2";
+				n = "0";
+				ArrayList<String>  ciudades = new ArrayList<String>();
+				
+				// leo la primera linea
+				nombre = new StringTokenizer( linea, " ");
+				p = nombre.nextToken();			// Paso el primer tokenizer, el p
+				q = nombre.nextToken();			// Paso el segundo tokenizer, el q
+				Mapa mapa  = new Mapa(p,q);
+				
+				// leo la segunda linea
+				linea = reader.readLine();
+				StringTokenizer tupla = new StringTokenizer(linea, ";"); // Este token separa pares de amigos
+				while (tupla.hasMoreTokens()){
+					nombre = new StringTokenizer(tupla.nextToken(), " ");
+					c1 = nombre.nextToken();
+					c2 = nombre.nextToken();
+					n = nombre.nextToken();
+					ciudades.add(c1);
+					ciudades.add(c2);
+					ciudades.add(n);
+				}
+				
+				// ahora en ciudades tengo un array de Ciudades, cada par est�n relacionadas
+				// ademas en p tengo al source y en q al destination
+			
+				int temp = Integer.parseInt(n);
+				Integer peso = temp;
+				mapa.agregar(c1,c2,peso);
+				
+				//System.out.println(mapa.origen.nombre);
+				//System.out.println(mapa.destino.nombre);
+				
+				res = buscarPrecio(mapa);
+				
+				Integer res2 = res;
+				os.append(res2.toString());
+				os.append("\n");
+			}
+			reader.close();
+			os.close();
+	}
+	
+
+}
