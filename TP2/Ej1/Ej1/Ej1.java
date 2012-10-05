@@ -19,19 +19,19 @@ public class Ej1 {
 		PriorityQueue<Tramo> heap = new PriorityQueue<Tramo>(11, comparator);
 		
 		mapa.origen.estado = true;
-		agregarVecinos(heap, mapa.origen.vecinos);
+		agregarTramos(heap, mapa.origen.vecinos);
 		Tramo actual;
 		while (mapa.destino.estado == false){
 			actual = heap.poll();
 			actual.hasta.estado = true;
 			actual.hasta.peso =  Math.min(actual.peso, actual.desde.peso);
-			agregarVecinos(heap, actual.hasta.vecinos);
+			agregarTramos(heap, actual.hasta.vecinos);
 		}
 
 		return mapa.destino.peso;
 	}
 	
-	public static void agregarVecinos(PriorityQueue<Tramo> heap, List<Tramo> vecinos){
+	public static void agregarTramos(PriorityQueue<Tramo> heap, List<Tramo> vecinos){
 		ListIterator<Tramo> it = vecinos.listIterator();
 		while (it.hasNext()){
 			Tramo t = it.next();

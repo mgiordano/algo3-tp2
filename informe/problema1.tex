@@ -15,21 +15,36 @@
 \begin{algorithmic}[1]
 
 \STATE $heap \leftarrow$ crear heap de tramos vacío
-\STATE $estado$ $origen \leftarrow confirmado$
+\STATE estado $origen \leftarrow confirmado$
 \STATE agregar tramos salientes de $origen$ al $heap$
 
-\WHILE{$estado$ $destino = no$ $confirmado$}
+\WHILE{estado $destino = no$ $confirmado$}
 	\STATE $tramo \leftarrow$ pop elemento del $heap$
 	\STATE $ciudad\_hasta \leftarrow$ ciudad a la que llega $tramo$
 	\STATE $ciudad\_desde \leftarrow$ ciudad desde la que sale el $tramo$
-	\IF{$estado$ $ciudad\_hasta = confirmado$} \STATE continuar
-	\ENDIF
-	\STATE $estado$ $ciudad\_hasta \leftarrow confirmado$
-	\STATE $peso$ $ciudad\_hasta \leftarrow min(peso$ $tramo,peso$ $ciudad\_desde)$
+	%\IF{$estado$ $ciudad\_hasta = confirmado$} \STATE continuar
+	\STATE estado $ciudad\_hasta \leftarrow confirmado$
+	\STATE peso $ciudad\_hasta \leftarrow min($peso $tramo$,peso $ciudad\_desde)$
 	\STATE agregar tramos salientes de $ciudad$ al $heap$
 	
 \ENDWHILE
-\RETURN $peso$ $destino$  
+\RETURN peso $destino$  
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{agregarTramos (\textbf{in/out} heap: \textsl{Heap}, \textbf{in} vecinos: \textsl{Lista(Tramo)}}
+\begin{algorithmic}[1]
+
+\WHILE{hay tramos en $vecinos$}
+	\STATE sacar un $tramo$ de $vecinos$
+	\STATE $ciudad\_hasta \leftarrow$ ciudad a la que llega el $tramo$
+	\IF{estado $ciudad\_hasta$ = confirmado}
+		\STATE no se agrega el $tramo$ al heap
+	\ELSE 
+		\STATE agregar $tramo$ al heap
+	\ENDIF
+\ENDWHILE
 \end{algorithmic}
 \end{algorithm}
 
