@@ -11,14 +11,11 @@ import java.util.TreeMap;
 
 public class Ej2 {
 	
-	public static Integer buscarArea(Map<Integer,Megavalla> horizontales, Map<Integer,Megavalla> verticales){
-		Integer cantH = horizontales.keySet().size()-1;
-		Integer cantV = verticales.keySet().size()-1;
-		System.out.println(cantH);
-		System.out.println(cantV);
+	public static Integer buscarArea(Map<Integer,Megavalla> horizontales, Map<Integer,Megavalla> verticales, Integer xMax, Integer yMax){
+
 		return 0;
 	}
-	
+		
 	public static void resolverFile(String file) throws IOException{
 		
 		BufferedReader reader = new BufferedReader(new FileReader(file)); // Creo el buffer a llenar
@@ -27,12 +24,11 @@ public class Ej2 {
 		
 		int res = 1;
 		
-		// Creamos los treemap que se mantienen ordenados por clave
-		Map<Integer, Megavalla> horizontales = new TreeMap<Integer, Megavalla>();
-		Map<Integer, Megavalla> verticales = new TreeMap<Integer, Megavalla>();
-		
 		// Leo el archivo
 		while ((linea = reader.readLine()) != null){ // mientras que hayan mas lineas que leer
+			// Creamos los treemap que se mantienen ordenados por clave
+			Map<Integer, Megavalla> horizontales = new TreeMap<Integer, Megavalla>();
+			Map<Integer, Megavalla> verticales = new TreeMap<Integer, Megavalla>();
 		
 			//la primera linea es un entero, altura de las langostas
 			int saltoLangostas = Integer.parseInt(linea);
@@ -109,7 +105,11 @@ public class Ej2 {
 			bordeYMax.insertar(0, yMax+1);
 			verticales.put(xMax+1, bordeY0);
 			
-			res = buscarArea(horizontales, verticales);
+			
+			xMax = 0;
+			yMax = 0;
+			
+			res = buscarArea(horizontales, verticales, xMax, yMax);
 
 
 			os.append(Integer.toString(res));
