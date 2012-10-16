@@ -5,9 +5,79 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 public class Ej2 {
+	
+/*	public Integer DFS(Campo campo){
+		Set<String> vallasCampo = campo.vallas.keySet();
+		Iterator<String> it = vallasCampo.iterator();
+		Integer pos, cantVecinos = 0, ciclos = 0, distancia = 0;
+		while (it.hasNext()){
+			String idValla = it.next();
+			Valla v = campo.vallas.get(idValla);
+			if (v.estado == 0){
+				// hacemos DFS
+				Stack<Valla> pila = new Stack<Valla>();
+				Valla w;
+				Valla z;
+				v.estado = 1;
+				pila.push(v);
+				while (!pila.empty()){
+					w = pila.pop();
+					w.padre = v;
+					Set<String> vecinos = w.vecinos.keySet();
+					Iterator<String> itVecinos = vecinos.iterator();
+					while (itVecinos.hasNext()){
+						z = w.vecinos.get(itVecinos.next());
+						if (z.estado == 0){
+							z.estado = 1;
+							pila.push(z);
+						}
+						if (z.estado == 2){
+							cantVecinos++;
+						}
+					}
+					if (cantVecinos >= 2){
+						d = w;
+						//System.out.print(d.id + " ");
+						while (true){
+							if (distancia <= 2){
+								System.out.print(d.padre + " ");
+								d = nodos.get(d.padre-1);
+								distancia++;
+								continue;
+							}
+							if (d.vecinos.contains(w)){
+								break;
+							}else{
+								System.out.print(d.padre + " ");
+								d = nodos.get(d.padre-1);
+								continue;
+							}
+						}
+						System.out.println(" ");
+						ciclos++;
+					}
+					w.estado = 2;
+					cantVecinos = 0;
+					v = w;
+				}				
+			}
+		}
+		return ciclos;
+	}
+	*/
+	
+	public static Integer buscarArea(Map<Integer,Megavalla> horizontales, Map<Integer,Megavalla> verticales){
+		Integer cantH = horizontales.keySet().size()-1;
+		Integer cantV = verticales.keySet().size()-1;
+		System.out.println(cantH);
+		System.out.println(cantV);
+		return 0;
+	}
 	
 	public static void resolverFile(String file) throws IOException{
 		
@@ -17,35 +87,91 @@ public class Ej2 {
 		
 		int res = 1;
 		
+		// Creamos los treemap que se mantienen ordenados por clave
+		Map<Integer, Megavalla> horizontales = new TreeMap<Integer, Megavalla>();
+		Map<Integer, Megavalla> verticales = new TreeMap<Integer, Megavalla>();
+		
 		// Leo el archivo
 		while ((linea = reader.readLine()) != null){ // mientras que hayan mas lineas que leer
 		
 			//la primera linea es un entero, altura de las langostas
 			int saltoLangostas = Integer.parseInt(linea);
-			Campo campo = new Campo(saltoLangostas);
+	//		Campo campo = new Campo(saltoLangostas);
 			
 			//la segunda linea contiene el resto de la informacion
 			linea = reader.readLine();
 			//Separamos primero en funcion de ";", individualizando tokens con la info de la valla
 			StringTokenizer tokenVallas = new StringTokenizer(linea,";");
-			int i = 0;
+			int x, y, longitud, altura, xMax = 0, yMax = 0;
 			while (tokenVallas.hasMoreTokens()){
 				StringTokenizer tokenData = new StringTokenizer(tokenVallas.nextToken(), " ");
-				int x = Integer.parseInt(tokenData.nextToken());
-				int y = Integer.parseInt(tokenData.nextToken());
+				x = Integer.parseInt(tokenData.nextToken());
+				y = Integer.parseInt(tokenData.nextToken());
 				String orientacion = tokenData.nextToken();
-				int longitud = Integer.parseInt(tokenData.nextToken());
-				int altura = Integer.parseInt(tokenData.nextToken());
-				String id = Integer.toString(i);
+				longitud = Integer.parseInt(tokenData.nextToken());
+				altura = Integer.parseInt(tokenData.nextToken());
+				// Veo xMax
+				if (orientacion.equals("|")){
+					if (x > xMax){
+						xMax = x;
+					}
+				}else{
+					if (x+longitud > xMax){
+						xMax = x+longitud;
+					}
+				}
+				// Veo yMax
+				if (orientacion.equals("-")){
+					if (y > yMax){
+						yMax = y;
+					}
+				}else{
+					if (y+longitud > yMax){
+						yMax = y+longitud;
+					}
+				}
 				
 				if (altura >= saltoLangostas){
-					Coordenada origen = new Coordenada(x,y);
-					campo.agregarValla(id, origen, orientacion, altura, longitud);
+//					Coordenada origen = new Coordenada(x,y);
+//					campo.agregarValla(id, origen, orientacion, altura, longitud);
+					if (orientacion.equals("|")){
+						if(verticales.containsKey(x)){
+							verticales.get(x).insertar(y, y+longitud);
+						}else{
+							Megavalla nueva = new Megavalla();
+							nueva.insertar(y, y+longitud);
+							verticales.put(x, nueva);
+						}
+					}else{
+						if(horizontales.containsKey(y)){
+							horizontales.get(y).insertar(x, x+longitud);
+						}else{
+							Megavalla nueva = new Megavalla();
+							nueva.insertar(x, x+longitud);
+							horizontales.put(y, nueva);
+						}
+					}
 				}
-				i++;
 			}
+			Megavalla bordeX0 = new Megavalla();
+			bordeX0.insertar(0, xMax+1);
+			horizontales.put(0, bordeX0);
+
+			Megavalla bordeXMax = new Megavalla();
+			bordeXMax.insertar(0, xMax+1);
+			horizontales.put(yMax+1, bordeXMax);
 			
-			//res = buscarArea(campo);
+			Megavalla bordeY0 = new Megavalla();
+			bordeY0.insertar(0, yMax+1);
+			verticales.put(0, bordeY0);
+			
+			Megavalla bordeYMax = new Megavalla();
+			bordeYMax.insertar(0, yMax+1);
+			verticales.put(xMax+1, bordeY0);
+			
+			res = buscarArea(horizontales, verticales);
+
+
 			os.append(Integer.toString(res));
 			os.append("\n");
 		}
