@@ -5,15 +5,51 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 public class Ej2 {
 	
-	public static Integer buscarArea(Map<Integer,Megavalla> horizontales, Map<Integer,Megavalla> verticales, Integer xMax, Integer yMax){
-
-		return 0;
+	public static Integer buscarArea(Parcela[][] parcelas, Integer xMax, Integer yMax){
+		Queue<Parcela> cola = new LinkedList<Parcela>();
+		parcelas[0][0].infestable = true;
+		cola.add(parcelas[0][0]);
+		Parcela parcela;
+		Integer areaInfestada = 0, i, j, cantH = parcelas.length, cantV = parcelas[0].length;
+		while (!(cola.isEmpty())){
+			parcela = cola.poll();
+			areaInfestada += parcela.area;
+			i = parcela.pos.x;
+			j = parcela.pos.y;
+			if (j+1 < cantV){
+				if(!(parcelas[i][j+1].infestable) && parcela.este){
+					parcelas[i][j+1].infestable = true;
+					cola.add(parcelas[i][j+1]);
+				}
+			}
+			if (j-1 > 0){
+				if (!(parcelas[i][j-1].infestable) && parcela.oeste){
+					parcelas[i][j-1].infestable = true;
+					cola.add(parcelas[i][j-1]);
+				}
+			}
+			if (i+1 < cantH){
+				if (!(parcelas[i+1][j].infestable) && parcela.norte){
+					parcelas[i+1][j].infestable = true;
+					cola.add(parcelas[i+1][j]);
+				}
+			}
+			if (i-1 > 0){
+				if (!(parcelas[i-1][j].infestable) && parcela.sur){
+					parcelas[i-1][j].infestable = true;
+					cola.add(parcelas[i-1][j]);
+				}
+			}
+		}
+		return ((xMax*yMax)-areaInfestada);
 	}
 		
 	public static void resolverFile(String file) throws IOException{
@@ -89,6 +125,7 @@ public class Ej2 {
 					}
 				}
 			}
+			
 			Megavalla bordeX0 = new Megavalla();
 			bordeX0.insertar(0, xMax+1);
 			horizontales.put(0, bordeX0);
@@ -105,11 +142,10 @@ public class Ej2 {
 			bordeYMax.insertar(0, yMax+1);
 			verticales.put(xMax+1, bordeY0);
 			
-			
-			xMax = 0;
-			yMax = 0;
-			
-			res = buscarArea(horizontales, verticales, xMax, yMax);
+			Campo campo = new Campo(horizontales,verticales,xMax,yMax);
+			campo.ordenarVallas();
+			Parcela[][] parcelas = campo.armarParcelas(); 
+			res = buscarArea(parcelas, xMax+1, yMax+1);
 
 
 			os.append(Integer.toString(res));

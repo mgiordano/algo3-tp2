@@ -1,5 +1,7 @@
 package Ej2;
 
+import java.util.Comparator;
+
 public class Coordenada {
 	
 	public int x;
@@ -12,24 +14,20 @@ public class Coordenada {
 		
 	}
 
-	public boolean alignHor(Coordenada a, int distancia){
-		boolean res = false;
-		if (y <= a.y){
-			if (a.y <= (y + distancia)){
-				res = true;
-			}
-		}
-		return res;
-	}
-	
-	public boolean alignVer(Coordenada a, int distancia){
-		boolean res = false;
-		if (x <= a.x){
-			if (a.x <= (x + distancia)){
-				res = true;
-			}
-		}
-		return res;
-	}
-	
+	class CoordenadaComparator implements Comparator<Coordenada>{
+		   
+	    public int compare(Coordenada c1, Coordenada c2){
+	       
+	    	Integer desde1 = c1.x;        
+	    	Integer desde2 = c2.x;   
+	       
+	        if(desde1 > desde2)
+	            return 1;
+	        else if(desde1 < desde2)
+	            return -1;
+	        else
+	            return 0;
+	        }
+	    }
+	   
 }

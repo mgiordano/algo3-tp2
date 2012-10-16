@@ -1,30 +1,32 @@
 package Ej2;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 public class Megavalla {
-	Map<Integer, Integer> vallas = new TreeMap<Integer, Integer>();
+	List<Coordenada> vallas = new ArrayList<Coordenada>();
 	
 	public void insertar(Integer inicio, Integer fin){
-		this.vallas.put(inicio, fin);
+		Coordenada extremos = new Coordenada(inicio,fin);
+		vallas.add(extremos);
 	}
 	
 	public boolean entranLoBicho(Integer inicio, Integer fin){
-		Iterator<Integer> itClaves = this.vallas.keySet().iterator();
+		ListIterator<Coordenada> itVallas = vallas.listIterator();
 		boolean res = true;
-		Integer pos;
-		while (itClaves.hasNext()){
-			if((pos = itClaves.next()) > inicio){
+		Coordenada extremos;
+		while (itVallas.hasNext()){
+			extremos = itVallas.next();
+			if(extremos.x > inicio){
 				break;
 			}else{
-				if(pos <= inicio && inicio <= this.vallas.get(pos)){
-					if (fin <= this.vallas.get(pos)){
+				if(extremos.x <= inicio && inicio <= extremos.y){
+					if (fin <= extremos.y){
 						res = false;
 						break;
 					}else{
-						inicio = this.vallas.get(pos);
+						inicio = extremos.y;
 					}
 				}
 			}

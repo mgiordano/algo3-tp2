@@ -9,7 +9,8 @@ public class Test2 {
 	@Test
 	public void leerFromFile() throws IOException{
 		
-		Ej2.resolverFile("./Tests/Tp2Ej2.in");	
+		Ej2.resolverFile("./Tests/Tp2Ej2.in");
+		Ej2.resolverFile("./Tests/TpEj2Maze.in");
 		
 		
 	}
