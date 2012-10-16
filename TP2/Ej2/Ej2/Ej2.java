@@ -11,66 +11,6 @@ import java.util.TreeMap;
 
 public class Ej2 {
 	
-/*	public Integer DFS(Campo campo){
-		Set<String> vallasCampo = campo.vallas.keySet();
-		Iterator<String> it = vallasCampo.iterator();
-		Integer pos, cantVecinos = 0, ciclos = 0, distancia = 0;
-		while (it.hasNext()){
-			String idValla = it.next();
-			Valla v = campo.vallas.get(idValla);
-			if (v.estado == 0){
-				// hacemos DFS
-				Stack<Valla> pila = new Stack<Valla>();
-				Valla w;
-				Valla z;
-				v.estado = 1;
-				pila.push(v);
-				while (!pila.empty()){
-					w = pila.pop();
-					w.padre = v;
-					Set<String> vecinos = w.vecinos.keySet();
-					Iterator<String> itVecinos = vecinos.iterator();
-					while (itVecinos.hasNext()){
-						z = w.vecinos.get(itVecinos.next());
-						if (z.estado == 0){
-							z.estado = 1;
-							pila.push(z);
-						}
-						if (z.estado == 2){
-							cantVecinos++;
-						}
-					}
-					if (cantVecinos >= 2){
-						d = w;
-						//System.out.print(d.id + " ");
-						while (true){
-							if (distancia <= 2){
-								System.out.print(d.padre + " ");
-								d = nodos.get(d.padre-1);
-								distancia++;
-								continue;
-							}
-							if (d.vecinos.contains(w)){
-								break;
-							}else{
-								System.out.print(d.padre + " ");
-								d = nodos.get(d.padre-1);
-								continue;
-							}
-						}
-						System.out.println(" ");
-						ciclos++;
-					}
-					w.estado = 2;
-					cantVecinos = 0;
-					v = w;
-				}				
-			}
-		}
-		return ciclos;
-	}
-	*/
-	
 	public static Integer buscarArea(Map<Integer,Megavalla> horizontales, Map<Integer,Megavalla> verticales){
 		Integer cantH = horizontales.keySet().size()-1;
 		Integer cantV = verticales.keySet().size()-1;
