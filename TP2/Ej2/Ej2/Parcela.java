@@ -1,7 +1,7 @@
 package Ej2;
 
 public class Parcela {
-	// Estos 4 booleanos delimitan cada porci�n infestable
+	// Estos 4 booleanos delimitan cada porcion infestable
 	boolean infestable;
 	boolean norte;
 	boolean sur;

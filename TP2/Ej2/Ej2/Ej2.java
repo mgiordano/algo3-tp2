@@ -13,56 +13,60 @@ import java.util.TreeMap;
 
 public class Ej2 {
 	
-	public static Integer buscarArea(Parcela[][] parcelas, Integer xMax, Integer yMax){
+	public static Integer buscarArea(Campo campo){
 		Queue<Parcela> cola = new LinkedList<Parcela>();
-		parcelas[0][0].infestable = true;
-		cola.add(parcelas[0][0]);
+		campo.parcelas[0][0].infestable = true;
+		cola.add(campo.parcelas[0][0]);
 		Parcela parcela;
-		Integer areaInfestada = 0, i, j, cantH = parcelas.length, cantV = parcelas[0].length;
+		Integer areaInfestada = 0, i, j;
 		while (!(cola.isEmpty())){
 			parcela = cola.poll();
 			areaInfestada += parcela.area;
 			i = parcela.pos.x;
 			j = parcela.pos.y;
-			if (j+1 < cantV){
-				if(!(parcelas[i][j+1].infestable) && parcela.este){
-					parcelas[i][j+1].infestable = true;
-					cola.add(parcelas[i][j+1]);
-				}
-			}
-			if (j-1 > 0){
-				if (!(parcelas[i][j-1].infestable) && parcela.oeste){
-					parcelas[i][j-1].infestable = true;
-					cola.add(parcelas[i][j-1]);
-				}
-			}
-			if (i+1 < cantH){
-				if (!(parcelas[i+1][j].infestable) && parcela.norte){
-					parcelas[i+1][j].infestable = true;
-					cola.add(parcelas[i+1][j]);
-				}
-			}
-			if (i-1 > 0){
-				if (!(parcelas[i-1][j].infestable) && parcela.sur){
-					parcelas[i-1][j].infestable = true;
-					cola.add(parcelas[i-1][j]);
-				}
+			infestarParcelasContiguas(parcela,i,j,campo,cola);
+		}
+		return (campo.xMax+1)*(campo.yMax+1)-areaInfestada;
+	}
+	
+	public static void infestarParcelasContiguas(Parcela parcela, Integer i, Integer j, Campo campo, Queue<Parcela> cola){
+		if (j+1 < campo.cantV){
+			if(!(campo.parcelas[i][j+1].infestable) && parcela.este){
+				campo.parcelas[i][j+1].infestable = true;
+				cola.add(campo.parcelas[i][j+1]);
 			}
 		}
-		return ((xMax*yMax)-areaInfestada);
+		if (j-1 > 0){
+			if (!(campo.parcelas[i][j-1].infestable) && parcela.oeste){
+				campo.parcelas[i][j-1].infestable = true;
+				cola.add(campo.parcelas[i][j-1]);
+			}
+		}
+		if (i+1 < campo.cantH){
+			if (!(campo.parcelas[i+1][j].infestable) && parcela.norte){
+				campo.parcelas[i+1][j].infestable = true;
+				cola.add(campo.parcelas[i+1][j]);
+			}
+		}
+		if (i-1 > 0){
+			if (!(campo.parcelas[i-1][j].infestable) && parcela.sur){
+				campo.parcelas[i-1][j].infestable = true;
+				cola.add(campo.parcelas[i-1][j]);
+			}
+		}
 	}
 		
-	public static void resolverFile(String file) throws IOException{
+	public static void resolverFile(String fileIn, String fileOut) throws IOException{
 		
-		BufferedReader reader = new BufferedReader(new FileReader(file)); // Creo el buffer a llenar
+		BufferedReader reader = new BufferedReader(new FileReader(fileIn)); // Creo el buffer a llenar
 		String linea; // Creo el string a utilizar (donde se van a guardar las cosas del buffer)
-		BufferedWriter os = new BufferedWriter( new FileWriter( "Tp2Ej2.out" ) );
+		BufferedWriter os = new BufferedWriter( new FileWriter(fileOut) );
 		
 		int res = 1;
 		
 		// Leo el archivo
 		while ((linea = reader.readLine()) != null){ // mientras que hayan mas lineas que leer
-			// Creamos los treemap que se mantienen ordenados por clave
+
 			Map<Integer, Megavalla> horizontales = new TreeMap<Integer, Megavalla>();
 			Map<Integer, Megavalla> verticales = new TreeMap<Integer, Megavalla>();
 		
@@ -104,8 +108,6 @@ public class Ej2 {
 				}
 				
 				if (altura >= saltoLangostas){
-//					Coordenada origen = new Coordenada(x,y);
-//					campo.agregarValla(id, origen, orientacion, altura, longitud);
 					if (orientacion.equals("|")){
 						if(verticales.containsKey(x)){
 							verticales.get(x).insertar(y, y+longitud);
@@ -144,9 +146,8 @@ public class Ej2 {
 			
 			Campo campo = new Campo(horizontales,verticales,xMax,yMax);
 			campo.ordenarVallas();
-			Parcela[][] parcelas = campo.armarParcelas(); 
-			res = buscarArea(parcelas, xMax+1, yMax+1);
-
+			campo.armarParcelas(); 
+			res = buscarArea(campo);
 
 			os.append(Integer.toString(res));
 			os.append("\n");

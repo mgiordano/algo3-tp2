@@ -11,6 +11,9 @@ public class Campo {
 	Map<Integer, Megavalla> verticales;
 	Integer xMax;
 	Integer yMax;
+	Integer cantH;
+	Integer cantV;
+	Parcela[][] parcelas;
 	
 	public Campo(Map<Integer, Megavalla> mvh, Map<Integer, Megavalla> mvv, Integer x, Integer y){
 		horizontales = mvh;
@@ -36,10 +39,10 @@ public class Campo {
 		}
 	}
 	
-	public Parcela[][] armarParcelas(){
-		Integer cantH = horizontales.keySet().size()-1;
-		Integer cantV = verticales.keySet().size()-1;
-		Parcela[][] parcelas = new Parcela[cantH][cantV];
+	public void armarParcelas(){
+		cantH = horizontales.keySet().size()-1;
+		cantV = verticales.keySet().size()-1;
+		Parcela[][] cuadricula = new Parcela[cantH][cantV];
 		Iterator<Integer> itHor1 = horizontales.keySet().iterator();
 		Iterator<Integer> itHor2 = horizontales.keySet().iterator();
 		itHor2.next();
@@ -61,11 +64,11 @@ public class Campo {
 				Integer area = (x2-x1)*(y2-y1);
 				Coordenada pos = new Coordenada(i,j);
 				Parcela marcela = new Parcela(norte,sur,este,oeste,pos,area);
-				parcelas[i][j] = marcela;
+				cuadricula[i][j] = marcela;
 				j++;
 			}
 			i++;
 		}
-		return parcelas;
+		parcelas = cuadricula;
 	}
 }
