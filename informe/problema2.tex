@@ -2,9 +2,20 @@
 
 \subsection{Introducción}
 
-Abordaje del problema. Extender vallas, armar parcelas. Crear un problema "isomorfo" o equivalente al que teníamos antes.
+En este problema se debe determinar el área total de un campo que queda protegida de una plaga de langostas. Para considerar aislada una porción del mismo, ésta debe estar completamente encerrada por vallas de altura mayor o igual a la del salto de las langostas. A partir de entender esto, pensamos de qué manera podíamos modelar el campo, partirlo en "porciones" (que luego llamaríamos \textit{parcelas}), y recorrerlas chequeando si podíamos infestarlas de langostas. Realizando este recorrido, esperábamos lograr identificar el área infestada y contando con el área total, obtener mediante una simple resta el área protegida.\\
+\indent Debido a cómo está presentado el problema, y los datos de entrada, consideramos el campo como el primer cuadrante de un sistema de ejes cartesianos. Así, el molino donde se ubica la Tía queda representado por el origen - $(0,0)$ - y cada valla se ubica en el plano con respecto a este punto. Además, a partir de la longitud y orientiacón de cada valla inferimos el extremo donde termina. De esta manera, al procesarlas todas, pudimos obtener cuáles eran las coordenadas máximas en sentido del eje de ordenadas y abscisas, con lo cual fijamos los límites del campo sumando uno a esos valores.\\
+\indent En un primer momento nos propusimos modelar el campo utilizando esta información pero volcándola en una matriz donde cada posición de la misma se correspondiera con un sector del campo de lado $1x1$. Nuestra idea era posicionar las vallas en la matriz, determinando qué cuadrados quedaban bloqueados, y luego infestar de alguna manera pintando las posiciones de la matriz a las que sí podíamos acceder. Rápidamente desistimos de esta idea (a pesar de que luego la retomaríamos optimizando nuestras estructuras) dado que manejarnos con esa matriz no nos permitía cumplir con la cota de complejidad pedida. Las dimensiones de la matriz hubieran sido proporcionales a la superficie del campo, la cual a su vez quedaba determinada por la ubicación de una valla, variable sobre la cual no podíamos suponer nada y no se relacionaba con las magnitudes que necesitábamos contar.\\
+\indent El segundo intento consistió en pensar cada valla como un nodo de un grafo, donde las aristas estuvieran representadas por las intersecciones entre las vallas. Luego, los vecinos de un nodo/valla serían otros nodos/vallas con los que se tocara en cualquier punto. Viéndolo así, buscamos interpretar las porciones completamente valladas como los ciclos de ese grafo. Una vez que tuvieramos identificados los ciclos, debíamos ver cuáles eran válidos, cuáles incluían a otros, y así procesar demasiados casos particulares. No pudimos llegar a esa instancia, pues antes nos encontramos con la dificultad de contar e identificar ciclos. Sin embargo, al pensar en cómo podíamos clasificar los ciclos, introdujimos un detalle que luego perduraría en nuestra solución final: a medida que procesamos cada valla para alojarla en nuestra estructura dejamos de lado aquella cuya altura sea menor a la que saltan las langostas. Así nos aseguramos que en el resto del problema vamos a mirar vallas que sean candidatas a proteger una porción del campo, con lo cual prescindimos de realizar este chequeo y mirar vallas innecesariamente.\\
+\indent Frente a un panorama incierto, y habiendo descartado dos intentos de solución, logramos desarrollar una tercera idea que terminaría siendo correcta para la resolución del problema tanto en términos de la solución esperada como de la complejidad temporal. 
 
-\subsection{Pseudocódigo}
+\subsection{Representación del Problema}
+
+El primer boceto de solución con que contamos intentaba trazar una cuadrícula sobre el campo y luego implementar eso sobre una matriz. Esto nos obligaba a movernos de a un paso a medida que infestabamos el terreno, transformando nuestra complejidad en algo que no se relacionaba con la cantidad de vallas, y que seguramente fuera muy superior a este número. Ahora bien, considerando este movimiento, pensamos que no tenía sentido pensar que la plaga de langostas se moviera en una dirección dada de a pasos tan pequeños, si en última instancia podría moverse hasta que se topara con una valla, infestando en un solo paso grande varios de nuestros pequeños sectores anteriores.\\
+\indent A partir de esta reformulación de la solución, ideamos dividir la representación del campo en distintas etapas (ver Fig. 1). 
+
+\clearpage
+
+\subsection{Pseudocódigos}
 
 \begin{algorithm}
 \caption{buscarArea (\textbf{in/out} campo: \textsl{Campo}) $\rightarrow$ res: \textsl{Integer}}
@@ -23,3 +34,26 @@ Abordaje del problema. Extender vallas, armar parcelas. Crear un problema "isomo
 \RETURN área de $campo$ - $areaInfestada$
 \end{algorithmic}
 \end{algorithm}
+
+
+\begin{algorithm}
+\caption{armarParcelas (\textbf{in/out} campo: \textsl{Campo})}
+\begin{algorithmic}[1]
+
+\STATE $cantH \leftarrow$ cantidad de megavallas horizontales en el $campo$
+\STATE $cantV \leftarrow$ cantidad de megavallas verticales en el $campo$
+\STATE $cuadricula \leftarrow$ armar matriz de $cantH*cantV$
+\WHILE{hay megavallas horizontales}
+	\WHILE{hay megavallas verticales}
+		\STATE crear una $parcela$ dada por las megavallas que la encierran
+		\STATE definir en $parcela$ si se puede infestar en cada dirección
+		\STATE definir en $parcela$ el área que comprende
+		\STATE asignar $parcela$ a la posición correspondiente en $cuadricula$
+	\ENDWHILE
+\ENDWHILE
+\STATE guardar $cuadricula$ en $campo$
+\end{algorithmic}
+\end{algorithm}
+
+\clearpage
+
