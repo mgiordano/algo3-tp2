@@ -1,0 +1,25 @@
+\section{Problema 2}
+
+\subsection{Introducción}
+
+Abordaje del problema. Extender vallas, armar parcelas. Crear un problema "isomorfo" o equivalente al que teníamos antes.
+
+\subsection{Pseudocódigo}
+
+\begin{algorithm}
+\caption{buscarArea (\textbf{in/out} campo: \textsl{Campo}) $\rightarrow$ res: \textsl{Integer}}
+\begin{algorithmic}[1]
+
+\STATE $cola \leftarrow$ crear cola de parcelas vacía
+\STATE marcar $parcela$ $origen$ del campo como infestable
+\STATE agregar $parcela$ $origen$ a la cola
+\STATE $areaInfestada \leftarrow 0$
+
+\WHILE{hay parcelas en la $cola$}
+	\STATE $parcela \leftarrow$ pop primer elemento de la cola
+	\STATE $areaInfestada \leftarrow areaInfestada$ $+$ área de $parcela$ 
+	\STATE agregar parcelas contiguas a $parcela$ que se puedan infestar
+\ENDWHILE
+\RETURN área de $campo$ - $areaInfestada$
+\end{algorithmic}
+\end{algorithm}
