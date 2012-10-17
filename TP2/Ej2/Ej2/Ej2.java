@@ -18,18 +18,18 @@ public class Ej2 {
 		campo.parcelas[0][0].infestable = true;
 		cola.add(campo.parcelas[0][0]);
 		Parcela parcela;
-		Integer areaInfestada = 0, i, j;
+		Integer areaInfestada = 0;
 		while (!(cola.isEmpty())){
 			parcela = cola.poll();
 			areaInfestada += parcela.area;
-			i = parcela.pos.x;
-			j = parcela.pos.y;
-			infestarParcelasContiguas(parcela,i,j,campo,cola);
+			infestarParcelasContiguas(parcela,campo,cola);
 		}
 		return (campo.xMax+1)*(campo.yMax+1)-areaInfestada;
 	}
 	
-	public static void infestarParcelasContiguas(Parcela parcela, Integer i, Integer j, Campo campo, Queue<Parcela> cola){
+	public static void infestarParcelasContiguas(Parcela parcela, Campo campo, Queue<Parcela> cola){
+		Integer i = parcela.pos.x;
+		Integer j = parcela.pos.y;
 		if (j+1 < campo.cantV){
 			if(!(campo.parcelas[i][j+1].infestable) && parcela.este){
 				campo.parcelas[i][j+1].infestable = true;
@@ -72,7 +72,6 @@ public class Ej2 {
 		
 			//la primera linea es un entero, altura de las langostas
 			int saltoLangostas = Integer.parseInt(linea);
-	//		Campo campo = new Campo(saltoLangostas);
 			
 			//la segunda linea contiene el resto de la informacion
 			linea = reader.readLine();
