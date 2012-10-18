@@ -11,7 +11,7 @@ En este problema se debe determinar el área total de un campo que queda protegi
 \subsection{Representación del Problema}
 
 El primer boceto de solución con que contamos intentaba trazar una cuadrícula sobre el campo y luego implementar eso sobre una matriz. Esto nos obligaba a movernos de a un paso a medida que infestabamos el terreno, transformando nuestra complejidad en algo que no se relacionaba con la cantidad de vallas, y que seguramente fuera muy superior a este número. Ahora bien, considerando este movimiento, concebimos que no tenía sentido pensar que la plaga de langostas se moviera en una dirección dada de a pasos tan pequeños ya que en última instancia podría moverse hasta que se topara con una valla, infestando en un solo paso grande varios de nuestros pequeños sectores anteriores.\\
-\indent Dividimos entonces la representación del campo en distintas etapas de procesamiento (ver \textbf{Fig. ~\ref{fig:ej2Mapeo} }). Primero, extendimos las vallas iniciales en megavallas que atravesaran el terreno del campo de un extremo a otro. Para esto contamos con dos diccionarios de megavallas, uno correspondiente a las verticales y otro a las horizontales. Cada definición se hace en base a una clave (entero) que representa la coordenada vertical u horizontal en que vive esa megavalla, y un significado que no es otra cosa que una lista de las vallas originales que viven en ese segmento y cuya altura impide el salto de las langostas. Además, la manera en que guardamos las vallas es a través de un par de coordenadas, cuyas componentes $x$ e $y$ indican el comienzo y fin de la valla respectivamente.
+\indent Dividimos entonces la representación del campo en distintas etapas de procesamiento (ver \textbf{Fig. ~\ref{fig:ej2Mapeo} }). Primero, extendimos las vallas iniciales en megavallas que atravesaran el terreno del campo de un extremo a otro. Para esto contamos con dos diccionarios de megavallas, uno correspondiente a las verticales y otro a las horizontales. Cada definición se hace en base a una clave (entero) que representa la coordenada vertical u horizontal en que se extiende esa megavalla, y un significado que no es otra cosa que una lista de las vallas originales que viven en ese segmento y cuya altura impide el salto de las langostas. Además, la manera en que representamos las vallas es a través de un par de coordenadas, cuyas componentes $x$ e $y$ indican el comienzo y fin de la valla respectivamente.
 
 \clearpage
 
@@ -21,28 +21,14 @@ El primer boceto de solución con que contamos intentaba trazar una cuadrícula 
 	\caption{Transformación del Problema Inicial}
 	\label{fig:ej2Mapeo}
 \end{figure}
+
+Como se puede observar en la segunda imagen de la Fig. anterior, las intersecciones de las megavallas definen una cuadrícula de parcelas cuyo tamaño es variable y heterogéneo. Sin embargo, todas tienen forma rectangular, y a partir de la información almacenada hasta el momento es posible determinar su área y si el acceso a las parcelas contiguas está impedido o no por algún tramo de valla. Esto nos permitió armar una matriz que representara esta cuadrícula de dimensiones $\#megavallasHor*\#megavallasVer$, y cuyas posiciones alojaran un objeto parcela que contuviera la información antes mencionada, además de agregar un atributo booleano para determinar si la parcela era infestable (necesario para recorrer la matriz con una adaptación de 'BFS'). Este procesamiento se realiza a través de la función $armarParcelas$ (ver \textsl{Pseudocódigo 2}). Para lograr el correcto armado y mapeo del campo a esta matriz necesitamos contar con las megavallas ordenadas en forma ascendente (garantizado por el diccionario) así como también las vallas contenidas en cada una. En un principio, implementamos cada megavalla como otro diccionario que tuviera como clave el comienzo de una valla y como significado su fin. Esto nos garantizaba el orden necesario para recorrerlas, pero nos imponía un costo logarítmico para acceder a su significado. Dado que esto nos arruinaba la complejidad, acudimos a la implementación de la colección de vallas mediante una lista de manera tal que, al terminar de procesar todas las vallas, ordenáramos cada colección y así pudieramos acceder a toda su información en tiempo constante. Por eso, en la resolución del problema, hay un llamado al método de Campo $ordenarVallas$ antes de armar la matriz de parcelas, pues en otro caso el algoritmo no sería correcto.\\
+\indent Esta matriz de parcelas se corresponde con la etapa número 3 de la Figura ~\ref{fig:ej2Mapeo}. Como se explica en el análisis de complejidad, esta vez sí podemos pagar el costo de recorrer la matriz, ya que sus dimensiones se encuentran en función de la magnitud que nos interesa (\#vallas). Al interpretarla como un grafo, las posiciones (parcelas) pasaron a ser los nodos, mientras que las aristas entre un par de nodos implica que las langostas pueden moverse de esa parcela a su contigua (ver Fig. ~\ref{fig:ej2Mapeo}.4). Luego, todo el área que pudiera ser infestada por estos desalmados crustáceos representaría una componente conexa del grafo. Supusimos entonces que la plaga comenzaba a infestar el campo desde los bordes, con lo cual partiendo de la parcela origen aplicamos una adaptación de 'BFS' ($buscarArea$, \textsl{Pseudocódigo 3}) para infestar la componente conexa que contuviera los bordes. A través de este recorrido contamos el área que podía ser infestada, y luego se lo restamos al área total.
+
 \clearpage
 
+
 \subsection{Pseudocódigos}
-
-\begin{algorithm}
-\caption{buscarArea (\textbf{in/out} campo: \textsl{Campo}) $\rightarrow$ res: \textsl{Integer}}
-\begin{algorithmic}[1]
-
-\STATE $cola \leftarrow$ crear cola de parcelas vacía
-\STATE marcar $parcela$ $origen$ del campo como infestable
-\STATE agregar $parcela$ $origen$ a la cola
-\STATE $areaInfestada \leftarrow 0$
-
-\WHILE{hay parcelas en la $cola$}
-	\STATE $parcela \leftarrow$ pop primer elemento de la cola
-	\STATE $areaInfestada \leftarrow areaInfestada$ $+$ área de $parcela$ 
-	\STATE agregar parcelas contiguas a $parcela$ que se puedan infestar
-\ENDWHILE
-\RETURN área de $campo$ - $areaInfestada$
-\end{algorithmic}
-\end{algorithm}
-
 
 \begin{algorithm}
 \caption{armarParcelas (\textbf{in/out} campo: \textsl{Campo})}
@@ -60,6 +46,24 @@ El primer boceto de solución con que contamos intentaba trazar una cuadrícula 
 	\ENDWHILE
 \ENDWHILE
 \STATE guardar $cuadricula$ en $campo$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{buscarArea (\textbf{in/out} campo: \textsl{Campo}) $\rightarrow$ res: \textsl{Integer}}
+\begin{algorithmic}[1]
+
+\STATE $cola \leftarrow$ crear cola de parcelas vacía
+\STATE marcar $parcela$ $origen$ del campo como infestable
+\STATE agregar $parcela$ $origen$ a la cola
+\STATE $areaInfestada \leftarrow 0$
+
+\WHILE{hay parcelas en la $cola$}
+	\STATE $parcela \leftarrow$ pop primer elemento de la cola
+	\STATE $areaInfestada \leftarrow areaInfestada$ $+$ área de $parcela$ 
+	\STATE agregar parcelas contiguas a $parcela$ que se puedan infestar
+\ENDWHILE
+\RETURN área de $campo$ - $areaInfestada$
 \end{algorithmic}
 \end{algorithm}
 
