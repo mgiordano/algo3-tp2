@@ -10,9 +10,17 @@ En este problema se debe determinar el área total de un campo que queda protegi
 
 \subsection{Representación del Problema}
 
-El primer boceto de solución con que contamos intentaba trazar una cuadrícula sobre el campo y luego implementar eso sobre una matriz. Esto nos obligaba a movernos de a un paso a medida que infestabamos el terreno, transformando nuestra complejidad en algo que no se relacionaba con la cantidad de vallas, y que seguramente fuera muy superior a este número. Ahora bien, considerando este movimiento, pensamos que no tenía sentido pensar que la plaga de langostas se moviera en una dirección dada de a pasos tan pequeños, si en última instancia podría moverse hasta que se topara con una valla, infestando en un solo paso grande varios de nuestros pequeños sectores anteriores.\\
-\indent A partir de esta reformulación de la solución, ideamos dividir la representación del campo en distintas etapas (ver Fig. 1). 
+El primer boceto de solución con que contamos intentaba trazar una cuadrícula sobre el campo y luego implementar eso sobre una matriz. Esto nos obligaba a movernos de a un paso a medida que infestabamos el terreno, transformando nuestra complejidad en algo que no se relacionaba con la cantidad de vallas, y que seguramente fuera muy superior a este número. Ahora bien, considerando este movimiento, concebimos que no tenía sentido pensar que la plaga de langostas se moviera en una dirección dada de a pasos tan pequeños ya que en última instancia podría moverse hasta que se topara con una valla, infestando en un solo paso grande varios de nuestros pequeños sectores anteriores.\\
+\indent Dividimos entonces la representación del campo en distintas etapas de procesamiento (ver \textbf{Fig. ~\ref{fig:ej2Mapeo} }). Primero, extendimos las vallas iniciales en megavallas que atravesaran el terreno del campo de un extremo a otro. Para esto contamos con dos diccionarios de megavallas, uno correspondiente a las verticales y otro a las horizontales. Cada definición se hace en base a una clave (entero) que representa la coordenada vertical u horizontal en que vive esa megavalla, y un significado que no es otra cosa que una lista de las vallas originales que viven en ese segmento y cuya altura impide el salto de las langostas. Además, la manera en que guardamos las vallas es a través de un par de coordenadas, cuyas componentes $x$ e $y$ indican el comienzo y fin de la valla respectivamente.
 
+\clearpage
+
+\begin{figure}[h]
+\centering                                                       
+        \includegraphics[width=320pt]{./figs/mapeoParcelas.png}
+	\caption{Transformación del Problema Inicial}
+	\label{fig:ej2Mapeo}
+\end{figure}
 \clearpage
 
 \subsection{Pseudocódigos}
