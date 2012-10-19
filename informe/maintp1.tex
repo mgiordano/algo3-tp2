@@ -22,6 +22,19 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{caratula}
+\usepackage{enumitem}
+
+%entorno para tener lista enumerada con identación
+\newcounter{ListStartCount}%
+\newenvironment{IndentedEnumerate}[1][]{%
+    \setcounter{ListStartCount}{\theenumi}%
+    \stepcounter{ListStartCount}%
+    \begin{enumerate}[start=\theListStartCount,label={\arabic*.},#1]%
+}{%
+    \setcounter{enumi}{\theListStartCount}%
+    \end{enumerate}%
+}%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      COMANDOS ÚTILES USADOS       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
