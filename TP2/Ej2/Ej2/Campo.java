@@ -25,16 +25,16 @@ public class Campo {
 	public void ordenarVallas(){
 		Set<Integer> clavesHor = horizontales.keySet();
 		Iterator<Integer> it = clavesHor.iterator();
-		Coordenada pedorra = new Coordenada(0,0);
+		Coordenada coord = new Coordenada(0,0);
 		while (it.hasNext()){
-			Comparator<Coordenada> comparator = pedorra.new CoordenadaComparator();
+			Comparator<Coordenada> comparator = coord.new CoordenadaComparator();
 			Collections.sort(horizontales.get(it.next()).vallas, comparator);
 		}
 		
 		Set<Integer> clavesVer = verticales.keySet();
 		it = clavesVer.iterator();
 		while (it.hasNext()){
-			Comparator<Coordenada> comparator = pedorra.new CoordenadaComparator();
+			Comparator<Coordenada> comparator = coord.new CoordenadaComparator();
 			Collections.sort(verticales.get(it.next()).vallas, comparator);
 		}
 	}

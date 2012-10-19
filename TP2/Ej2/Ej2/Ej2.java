@@ -85,29 +85,17 @@ public class Ej2 {
 				String orientacion = tokenData.nextToken();
 				longitud = Integer.parseInt(tokenData.nextToken());
 				altura = Integer.parseInt(tokenData.nextToken());
-				// Veo xMax
-				if (orientacion.equals("|")){
-					if (x > xMax){
-						xMax = x;
-					}
-				}else{
-					if (x+longitud > xMax){
-						xMax = x+longitud;
-					}
-				}
-				// Veo yMax
-				if (orientacion.equals("-")){
-					if (y > yMax){
-						yMax = y;
-					}
-				}else{
-					if (y+longitud > yMax){
-						yMax = y+longitud;
-					}
-				}
-				
 				if (altura >= saltoLangostas){
 					if (orientacion.equals("|")){
+						// Veo xMax
+						if (x > xMax){
+							xMax = x;
+						}
+						// Veo yMax
+						if (y+longitud > yMax){
+							yMax = y+longitud;
+						}
+						//Definimos la valla
 						if(verticales.containsKey(x)){
 							verticales.get(x).insertar(y, y+longitud);
 						}else{
@@ -115,7 +103,16 @@ public class Ej2 {
 							nueva.insertar(y, y+longitud);
 							verticales.put(x, nueva);
 						}
-					}else{
+					}
+					if (orientacion.equals("-")){
+						// Veo yMax
+						if (y > yMax){
+							yMax = y;
+						}
+						// Veo xMax
+						if (x+longitud > xMax){
+							xMax = x+longitud;
+						}
 						if(horizontales.containsKey(y)){
 							horizontales.get(y).insertar(x, x+longitud);
 						}else{
