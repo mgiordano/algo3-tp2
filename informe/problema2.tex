@@ -31,6 +31,24 @@ Como se puede observar en la segunda imagen de la Fig. anterior, las interseccio
 \subsection{Pseudocódigos}
 
 \begin{algorithm}
+\caption{buscarArea (\textbf{in/out} campo: \textsl{Campo}) $\rightarrow$ res: \textsl{Integer}}
+\begin{algorithmic}[1]
+
+\STATE $cola \leftarrow$ crear cola de parcelas vacía
+\STATE marcar $parcela$ $origen$ del campo como infestable
+\STATE agregar $parcela$ $origen$ a la cola
+\STATE $areaInfestada \leftarrow 0$
+
+\WHILE{hay parcelas en la $cola$}
+	\STATE $parcela \leftarrow$ pop primer elemento de la cola
+	\STATE $areaInfestada \leftarrow areaInfestada$ $+$ área de $parcela$ 
+	\STATE agregar parcelas contiguas a $parcela$ que se puedan infestar
+\ENDWHILE
+\RETURN área de $campo$ - $areaInfestada$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
 \caption{armarParcelas (\textbf{in/out} campo: \textsl{Campo})}
 \begin{algorithmic}[1]
 
@@ -50,20 +68,24 @@ Como se puede observar en la segunda imagen de la Fig. anterior, las interseccio
 \end{algorithm}
 
 \begin{algorithm}
-\caption{buscarArea (\textbf{in/out} campo: \textsl{Campo}) $\rightarrow$ res: \textsl{Integer}}
+\caption{entranLoBicho (\textbf{in/out} megavalla: \textsl{Megavalla}, \textbf{in/out} inicio, fin: \textsl{Integer}) $\rightarrow$ res: \textsl{boolean}}
 \begin{algorithmic}[1]
 
-\STATE $cola \leftarrow$ crear cola de parcelas vacía
-\STATE marcar $parcela$ $origen$ del campo como infestable
-\STATE agregar $parcela$ $origen$ a la cola
-\STATE $areaInfestada \leftarrow 0$
-
-\WHILE{hay parcelas en la $cola$}
-	\STATE $parcela \leftarrow$ pop primer elemento de la cola
-	\STATE $areaInfestada \leftarrow areaInfestada$ $+$ área de $parcela$ 
-	\STATE agregar parcelas contiguas a $parcela$ que se puedan infestar
+\STATE $res \leftarrow true$
+\WHILE{haya vallas en $megavalla$}
+	\STATE tomamos una $valla$ de la lista
+	\IF{extremo inicial de la valla $> inicio$}
+		\STATE \textbf{fin}
+	\ELSE
+		\IF{inicio y fin se encuentran entre los extremos de la valla}
+			\STATE res $\leftarrow false$
+			\STATE \textbf{fin}
+		\ELSE
+			\STATE $inicio \leftarrow$ extremo final de $valla$
+		\ENDIF
+	\ENDIF
 \ENDWHILE
-\RETURN área de $campo$ - $areaInfestada$
+\RETURN $res$
 \end{algorithmic}
 \end{algorithm}
 
@@ -79,7 +101,18 @@ Para ver la correctitud del programa, es necesario analizar sus distintas etapas
 \indent Debido a cómo fue construída, tanto la primera y última fila de la matriz como su primera y última columna corresponden a bordes del campo cuyas parcelas son infestables, pues asumimos que la plaga proviene desde cualquier dirección hacia el campo. Como esto impacta sobre el área total del campo, en principio el borde puede determinarse de manera arbitraria: lo importante es que exista, ya que sino el algoritmo no funcionaría como esperamos.\\
 \indent Sea entonces $mp$ la matriz de parcelas de dimensiones $\#megaVallasH*\#megaVallasV$, este algoritmo comienza accediendo a la posición $(0,0)$ de la matriz para tomar la parcela $p_{0}$ y asignarle la condición de `infestable'; luego la agrega a la cola y comienza el ciclo iterativo de recorrido. El invariante de nuestro algoritmo determina que cualquier parcela agregada a la cola puede ser infestada a través de alguna de sus parcelas vecinas (lo cual interpretamos como que exista una arista entre ambos nodos/parcelas), con lo cual esta suerte de `BFS' se irá moviendo por la componente conexa que incluya a $p_{0}$ y a través de un efecto dominó infestará todas las parcelas en esta componente. Dado que garantizamos que hubiera al menos una fila o columna de parcelas borde infestables en cada extremo alrededor de todo el campo, cualquier parcela que no esté contenida en la componente conexa mencionada habrá quedado a salvo de las langostas gracias a su vallado, y por ende al restar el área infestada por el algoritmo al área total del campo habremos obtenido el área protegida total que se buscaba.\\
 \indent El ciclo de la función itera mientras la cola no esté vacía. Dado que la precondición antes de entrar por primera vez es que la cola posee a $p_{0}$ y esperamos que a partir de ésta se recorra toda la componente conexa que la incluye, el hecho de que la cola se vacíe en alguna iteración dada implica que se ha recorrido la componente en su totalidad, con lo cual el área infestada acumulada en la variable entera es correcta. Sólo resta ver que el desplazamiento a través de la matriz sea correcto.\\
-\indent En una iteración del ciclo, se saca el primer elemento de la cola ($p_{k}$) y se acumula su área al área parcial infestada. Como se vio, toda parcela en la cola ya ha sido marcada como infestable. Sea $(i,j)$ la posición de $p_{i}$ en $mp$, se invoca a la auxiliar $infestarParcelasContiguas$ que chequea si $(i+1,j), (i,j+1), (i-1,j),(i,j-1) \in mp$. En los casos que esto se cumpla, esta función pregunta si la parcela $p_{l}$ contenida en cualquiera de esas posiciones ya ha sido infestada ($aka$ visitada) y si, en todo caso, puede ser infestada desde $(i,j)$ (o sea, existe una arista entre $p_{k}$ y $p_{l}$). En el caso en que ambas condiciones fueran verdaderas, se marca $p_{l}$ como infestada y se la agrega a la cola para luego tratar de infestar a sus parcelas contiguas. Todo esto muestra que nunca se visita una misma parcela dos veces, que se evalúan todas las parcelas que pasan por la cola y que, para cada una de ellas se chequea si se puede infestar en las cuatro direcciones posibles, demostrando que todo lo anterior cumple con lo esperado y que el comportamiento de esta función es correcto respecto de la solución pedida. 
+\indent En una iteración del ciclo, se saca el primer elemento de la cola ($p_{k}$) y se acumula su área al área parcial infestada. Como se vio, toda parcela en la cola ya ha sido marcada como infestable. Sea $(i,j)$ la posición de $p_{i}$ en $mp$, se invoca a la auxiliar $infestarParcelasContiguas$ que chequea si $(i+1,j), (i,j+1), (i-1,j),(i,j-1) \in mp$. En los casos que esto se cumpla, esta función pregunta si la parcela $p_{l}$ contenida en cualquiera de esas posiciones ya ha sido infestada ($aka$ visitada) y si, en todo caso, puede ser infestada desde $(i,j)$ (o sea, existe una arista entre $p_{k}$ y $p_{l}$). En el caso en que ambas condiciones fueran verdaderas, se marca $p_{l}$ como infestada y se la agrega a la cola para luego tratar de infestar a sus parcelas contiguas. Todo esto muestra que nunca se visita una misma parcela dos veces, que se evalúan todas las parcelas que pasan por la cola y que, para cada una de ellas se chequea si se puede infestar en las cuatro direcciones posibles, demostrando que todo lo anterior cumple con lo esperado y que el comportamiento de esta función es correcto respecto de la solución pedida. \\
+
+\textbf{Correctitud de \textit{armarParcelas} }
+
+El correcto funcionamiento de $buscarArea$ se basa principalmente en la correcta representación de la matriz de parcelas. Esta función se encarga de tomar toda la información de la instancia almacenada en el objeto de tipo $Campo$ y transformarla en la matriz necesaria. En este momento de la ejecución del programa, contamos con todas las vallas correctamente cargadas en los diccionarios de megavallas horizontales y verticales respectivamente, y para cada megavalla su lista de vallas se encuentra ordenada de forma ascendente a partir del punto en que comienza cada una. La idea principal de esta función es iterar en orden ambos diccionarios y a partir de las intersecciones de estos segmentos generar las parcelas correspondientes, calculando su área y si pueden pasar langostas por sus lados. Veamos cómo funciona el armado:\\
+\indent Al comienzo de la función se crea la matriz de parcelas vacía. Sus dimensiones corresponden a la cantidad de megavallas horizontales por la cantidad de verticales. El armado de la matriz se hace primero por filas, y por cada fila se recorren sus columnas. Esto se traslada a cómo se recorren las megavallas. Dado que estas son simplemente segmentos, necesitamos contar con dos de ellas para poder delimitar una franja. De esta manera, fijar una fila significa fijar dos iteradores sobre las megavallas horizontales distantes en una posición sobre el conjunto de claves. Luego, el segundo ciclo recorre las megavallas verticales moviendo de la misma manera dos iteradores defasados en una posición. Además, la función sincroniza un par de enteros $i,j$ con el movimiento de estos iteradores para mapear las parcelas resultantes a la matriz. En resumen, los iteradores proveen toda la información necesaria para delimitar cada parcela. Dos apuntan a las megavallas que delimitan sus lados Norte y Sur, y dos verticales a sus lados Este y Oeste. Sea $m_{i}$ una de estas vallas, y suponiendo que su dirección fuera horizontal, se la busca en el diccionario correspondiente y luego se le aplica el método $entranLoBicho$, pasándole como parámetros los enteros correspondientes a las megavallas verticales que la cortan (apuntados por los iteradores antes mencionados). Una vez que se repite este proceso para el resto de los lados, se asignan los correspondientes valores de verdad en el objeto Parcela, se la marca como no infestable, se almacena su área y se la asigna a la posición $(i,j)$ de la matriz.\\
+\indent Finalmente, esta matriz se almacena en el objeto de tipo $Campo$, lista para ser recorrida por $buscarArea$.\\
+
+\textbf{Correctitud de \textit{entranLoBicho}}
+
+Esta es otra de las funciones cruciales en el correcto funcionamiento del programa. Dada una megavalla y dos puntos $x_{i}$, $x_{f}$ en esa dirección, determina si por el segmento que forman pueden pasar langostas. En otras palabras, busca a través de todas las vallas definidas en la megavalla si éstas logran cubrir la totalidad del segmento, lo cual implicaría que está vallado. Esto se realiza iterando a través de todas las vallas definidas, previamente ordenadas mediante el método $ordenarVallas$, y comparando sus extremos con los del segmento en cuestión. Al tomar una valla $v_{k}$ con extremos $v_{i}$ inicial y $v_{f}$ final, si $v_{i} > x_{i}$ entonces existe un hueco en el segmento y automáticamente termina la ejecución, devolviendo verdadero (pueden entrar los bichos). Caso contrario, se chequea si $x_{i} \leq v_{f}$. Si esto se cumple y además $x_{f} \leq v_{f}$, entonces todo el segmento está contenido en $v_{k}$ y se puede concluir que los bichos no pasarán. En caso de que la última condición no se cumpliera, se buscará si el segmento está protegido por las vallas restantes, por lo que se vuelve a iterar sobre las vallas utilizando el mismo procedimiento pero cambiando $x_{i}$ por $v_{f}$.
+
 
 \clearpage
 
@@ -90,7 +123,7 @@ estructuras que utilizamos para resolver el ejercicio. Una vez que hayamos
 calculado cada una, podremos analizar la complejidad total del programa. Antes, algunas propiedades que utilizaremos:
 
 \begin{flushleft}
-\textbf{Lema 1:} ($\forall m \in$ megavallas) Sea $n$ la cantidad de vallas contenidas en $m$, se cumple: que $1 \leq n \leq \#vallasTotales$\\
+\textbf{Lema 1:} ($\forall m \in$ megavallas) Sea $n$ la cantidad de vallas contenidas en $m$, se cumple: que $1 \leq n \leq \#vallasTotales$ (salvo las megavallas de los bordes que no contienen ninguna valla).\\
 
 \textbf{Lema 2:} Sea $M$ la cantidad total de megavallas y dado que para que exista una megavalla debe contener al menos una valla, $M \leq \#vallasTotales$\\
 \end{flushleft}
@@ -158,28 +191,18 @@ Pseudocódigo presentado en la sección 2.3.
 	\item Para obtener la cantidad de megavallas horizontales, pedimos el $keySet$ al diccionario en $O(1)$ y preguntamos su tamaño.
 	\item Idem anterior. Además, por el \textbf{Lema 2}, ambas magnitudes tienen como cota superior a la cantidad total de vallas.
 	\item Se arma una matriz de tamaño a lo sumo $vallas$ x $vallas$ $\rightarrow$ $O(vallas^2)$
-  	\item El primer while cicla a lo sumo $vallas$ veces, y recorre las megavallas horizontales
-	\begin{IndentedEnumerate}		
-		\item Idem, recorre las megavallas verticales
+  	\item El primer while cicla a lo sumo $vallas$ veces, y recorre las megavallas horizontales		
+	\item El segundo recorre las megavallas verticales ($vallas$ veces también)
 		\begin{IndentedEnumerate}
-		\item .
 		\item Creamos una nueva parcela $\rightarrow$ $O(1)$
   		\item Calculamos $entranLoBicho$ para cada dirección (Norte, Sur, Este, Oeste) $\rightarrow$ $O(4*vallas)$ $\subset$ $O(vallas)$ 
   		\item Calculamos el área comprendida por las 4 megavallas $\rightarrow$ $O(1)$
   		\item Agregamos esta parcela a la matriz en tiempo constante, dado que la asignación de la parcela se hace por referencia $\rightarrow$ $O(1)$
-		\end{IndentedEnumerate}
 	\end{IndentedEnumerate}		
  \end{enumerate}
 
- \indent Nuevamente, como $Java$
-realiza las asignaciones por referencia, la operación de la linea 12
-se hace en tiempo constante.\\
- \indent En lo que queda de la función realizamos operaciones $O(1)$ para calcular enteros y creamos la matriz
-en $O(vallas^2)$.\\
- \indent El while de la linea 4 itera $vallas$ veces al igual que el de la linea
-5, por lo tanto vamos a tener $O(vallas$ $*$ $vallas)$ multiplicado por el costo
-del segundo while. En este while realizamos todas operaciones $O(1)$ salvo los
-llamados a $entranLoBicho$ que cuestan $O(vallas)$.\\
+
+\indent En total, por estar anidados ambos ciclos iteran en orden $O(vallas$ $*$ $vallas)$. En todas esas iteraciones se realizan operaciones constantes salvo los llamados a $entranLoBicho$ que cuestan $O(vallas)$.\\
  \indent Por lo tanto, podemos decir que la complejidad total de la función
 es:\\ $O(vallas^2$ $+$ $vallas$ $*$ $vallas$ $*$ $vallas)$ $\subset$
 $O(vallas^3)$
@@ -225,52 +248,30 @@ complejidad de esta función va a ser la complejidad final de nuestro programa.\
 \indent Como no debemos contar la complejidad de leer y escribir en los
 archivos, analizaremos solo la complejidad del código a partir de que los datos
 fueron levantados.\\
-\indent Ciclamos por todas las vallas, levantando sus parámetros y fijándonos si
-estamos en un máximo en x y/o un máximo en y. Estas operaciones se realizan en
-$O(1)$ dado que solo comparamos y asignamos enteros.\\
-\indent Luego nos fijamos si la altura de la valla supera al del salto de las
-langostas. Si no lo hace, descartamos esa valla. Si la altura es mayor al salto,
-procedemos a ver en que megavalla se inserta. Como los casos de vallas
-horizontales y verticales son disjuntos, podemos analizar uno solo, dado que son
-iguales (pondremos a modo de ejemplo el caso vertical).\\
-Ahora bien, puede pasar que la megavalla adonde se tiene que insertar la valla,
-ya existe, o que haya que crear una nueva.  Para ver esto usamos la función
-$containsKey$ del diccionario que toma tiempo logarítmico, es decir
-$O(log(megavallasVerticales))$ $\subset$ $O(log(vallas))$. Ahora los 2 casos
-son:
+\indent Ciclamos por todas las vallas, levantando sus parámetros y fijándonos primero si su altura es suficiente para impedir el salto de las langostas. En caso afirmativo, la procesamos; si no, la desechamos y seguimos adelante.\\
+Al procesar una valla, la clasificamos acorde a su orientación y luego chequeamos si alguno de sus extremos mejora el punto más distante en el campo (método mediante el cual estimamos su área). Estas operaciones se realizan en $O(1)$ dado que solo comparamos caracteres, enteros y asignamos estos últimos. Para agregarla a la estructura procedemos a ver en qué megavalla se inserta. Como los casos de vallas
+horizontales y verticales son disjuntos, podemos analizar uno solo, dado que son iguales (pondremos a modo de ejemplo el caso vertical).\\
+\indent Mediante la función $containsKey$ del diccionario podemos determinar si la megavalla que contiene a la valla en cuestión ya fue definida o no. Este chequeo toma tiempo logarítmico, es decir $O(log(megavallasVerticales))$ $\subset$ $O(log(vallas))$. A partir de su resultado, los dos casos posibles son:
 \begin{itemize}
  \item \textbf{Ya existía la megavalla}: $get$ en el diccionario toma
-$O(log(megavallasVerticales))$ $\subset$ $O(log(vallas))$ e insertar en una
-megavalla ($arrayList$) toma tiempo $O(1)$ amortizado. $\rightarrow$
+$O(log(megavallasVerticales))$ $\subset$ $O(log(vallas))$ e insertar la valla en una
+megavalla ($add$ $arrayList$) toma tiempo $O(1)$ amortizado. $\rightarrow$
 $O(log(vallas))$
  \item \textbf{No existía la megavalla}: Crear una nueva megavalla se hace en
-tiempo
-constante. Insertar la valla en la megavalla toma tiempo $O(1)$ amortizado.
-Insertar en el diccionario mediante la función $put$ toma tiempo
-$O(log(megavallasVerticales))$ $\subset$ $O(log(vallas))$  $\rightarrow$
-$O(log(vallas))$
+tiempo constante. Insertar la valla en la megavalla toma tiempo $O(1)$ amortizado. Insertar en el diccionario mediante la función $put$ toma tiempo $O(log(megavallasVerticales))$ $\subset$ $O(log(vallas))$  $\rightarrow$ $O(log(vallas))$
 \end{itemize}
 
-\indent Por lo tanto podemos decir que la complejidad de armar los diccionarios
-de vallas horizontales y verticales es $O(vallas$ $log(vallas))$.\\
-\indent Ahora insertamos las 4 megavallas de los bordes. Como ninguna de las 4
-existía podemos tomar la complejidad que escribimos anteriormente para el caso
-de insertar una valla en una megavalla que no existía. $\rightarrow$
-$O(4*log(vallas))$ $\subset$ $O(log(vallas))$\\
-\indent Creamos un nuevo campo en $O(nuevoCampo)$.\\
-\indent Ordenamos las vallas del campo en $O(ordenarVallas)$.\\
-\indent Armamos las parcelas de la matriz en $O(armarParcelas)$.\\
+Por lo tanto podemos decir que la complejidad de armar los diccionarios de vallas horizontales y verticales es $O(vallas$ $log(vallas))$.\\
+\indent Al finalizar el procesamiento de todas las vallas contamos con los puntos más lejanos en las direcciones vertical y horizontal. Luego sumando 1 a estos valores creamos las 4 megavallas de los bordes. Como ninguna de las 4 existía podemos tomar la complejidad que escribimos anteriormente $\rightarrow$ $O(4*log(vallas))$ $\subset$ $O(log(vallas))$\\
+
+\indent Creamos un nuevo campo en $O(1)$ (por lo analizado en esa Clase)\\
+\indent Ordenamos las vallas del campo en  $O(vallas^2$ $log(vallas))$.\\
+\indent Armamos las parcelas de la matriz en $O(vallas^3)$.\\
 \indent Por ultimo buscamos la cantidad de área a salvo mediante la función
-buscarArea en $O(buscarArea)$.\\
-\indent Por lo tanto, podemos decir que la complejidad total de nuestro
-algoritmo es:\\
-$O(vallas$
-$log(vallas)$+$log(vallas)$+$nuevoCampo$+$ordenarVallas$+$armarParcelas$+$buscar
-Area)$ $\subset$ $O(vallas$ $log(vallas)$ $+$ $log(vallas)$ $+$ $1$ $+$
-$vallas^2$ $log(vallas)$ $+$ $vallas^3$ $+$
-$vallas^2)$\\
-\indent \textbf{Por el álgebra de ordenemos podemos concluir que la complejidad
-del algoritmo es $O(vallas^3)$.}
+buscarArea en $O(vallas^2)$.\\
+
+\indent Por lo tanto, podemos decir que la \textbf{complejidad total} del programa es:\\
+$O(vallas$ $log(vallas)$+$log(vallas)$+$vallas^2$ $log$ $vallas$+$vallas^3$+$vallas^2) \subset$ \textbf{$O(vallas^3)$}
 
 \end{itemize}
 
