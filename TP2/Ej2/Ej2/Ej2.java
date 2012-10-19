@@ -24,7 +24,7 @@ public class Ej2 {
 			areaInfestada += parcela.area;
 			infestarParcelasContiguas(parcela,campo,cola);
 		}
-		return (campo.xMax+1)*(campo.yMax+1)-areaInfestada;
+		return (campo.xMax)*(campo.yMax)-areaInfestada;
 	}
 	
 	public static void infestarParcelasContiguas(Parcela parcela, Campo campo, Queue<Parcela> cola){
@@ -140,7 +140,7 @@ public class Ej2 {
 			bordeYMax.insertar(0, yMax+1);
 			verticales.put(xMax+1, bordeY0);
 			
-			Campo campo = new Campo(horizontales,verticales,xMax,yMax);
+			Campo campo = new Campo(horizontales,verticales,xMax+1,yMax+1);
 			campo.ordenarVallas();
 			campo.armarParcelas(); 
 			res = buscarArea(campo);

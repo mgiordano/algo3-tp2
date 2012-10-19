@@ -21,7 +21,7 @@ public class Megavalla {
 			if(extremos.x > inicio){
 				break;
 			}else{
-				if(extremos.x <= inicio && inicio <= extremos.y){
+				if(inicio <= extremos.y){
 					if (fin <= extremos.y){
 						res = false;
 						break;
